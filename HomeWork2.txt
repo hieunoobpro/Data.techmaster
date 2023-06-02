@@ -1,0 +1,165 @@
+1295. Find Numbers with Even Number of Digits
+class Solution {
+    public int findNumbers(int[] nums) {
+        int sum=0;
+        int count=0;
+       for(int i=0;i<nums.length;i++) {
+            while (nums[i] != 0) {
+            nums[i] /= 10;
+            count++;
+            }
+            if(count % 2 ==0){
+                sum++;
+                count =0;
+            }
+            else count =0;
+       }
+       return sum;
+    }
+}
+88. Merge Sorted Array
+class Solution {
+    public void merge(int[] nums1, int m, int[] nums2, int n) {
+        int c =0;
+        for(int i = m;i<nums1.length;i++){
+            nums1[i]=nums2[c];
+            c++;
+        }
+        Arrays.sort(nums1);
+    }
+}
+27. Remove Element
+class Solution {
+    public int removeElement(int[] nums, int val) {
+        int k=0;
+        for(int i =0;i<nums.length;i++)
+        {
+            if (nums[i]!=val){
+                k++;
+            }
+            if (nums[i]==val){
+                nums[i]=10000;
+            }
+        }
+        Arrays.sort(nums);
+        return k;
+    }
+}
+1089. Duplicate Zeros
+class Solution {
+    public void duplicateZeros(int[] arr) {
+        int[] check = new int[arr.length];
+        int c=0;
+        int b =0;
+        while(c<check.length && b<arr.length) {
+            if(arr[c] == 0) {
+                check[b] =0;
+                if(b+1<arr.length) {
+                    check[b+1] =0;
+                }
+                b +=2;
+                c++;
+            } 
+            else {
+                check[b] = arr[c];
+                b++;
+                c++;
+            }
+        }
+        for(int i=0;i<arr.length;i++) arr[i]=check[i];
+    }
+}
+283. Move Zeroes
+class Solution {
+    public void moveZeroes(int[] nums) {
+        int [] n = new int[nums.length];
+        int c =0;
+        for(int i=0;i<nums.length;i++){
+            if(nums[i] != 0){
+                n[c] = nums[i];
+                c++;
+            } 
+        }
+        for(int i=0;i<nums.length;i++){
+            nums[i]=n[i];
+        }
+    }
+}
+845. Longest Mountain in Array
+class Solution {
+    public int longestMountain(int[] arr) {
+int n = arr.length;
+    int mount = 0;
+    int i = 0;
+    while (i < n) {
+        int j = i;
+        // tìm đỉnh núi núi
+        while (j < n - 1 && arr[j] < arr[j + 1]) {
+            j++;
+        }
+        if (j == i) {
+            i++;
+            continue;
+        }
+        int k = j;
+        // tìm chân núi
+        while (k < n - 1 && arr[k] > arr[k + 1]) {
+            k++;
+        }
+        if (k == j) {
+            i = k + 1;
+            continue;
+        }
+        // đỉnh dài nhất
+        mount = Math.max(mount, k - i + 1);
+        i = k;
+    }
+
+    return mount;
+    }
+}
+387. First Unique Character in a String
+class Solution {
+    public int firstUniqChar(String s) {
+HashMap<Character, Integer> checkMap = new HashMap<>();
+        for(int i=0;i< s.length();i++){
+            // if present
+            if(checkMap.containsKey(s.charAt(i))){
+                checkMap.put(s.charAt(i), checkMap.get(s.charAt(i))+1);
+            }else{
+                checkMap.put(s.charAt(i),1);
+            }
+        }
+
+        for(int i=0; i<s.length();i++){
+            if(checkMap.containsKey(s.charAt(i)) && checkMap.get(s.charAt(i))==1) return i;
+        }
+       return -1;
+    }
+}
+1221. Split a String in Balanced Strings
+class Solution {
+    public int balancedStringSplit(String s) {
+    int count = 0;
+    int balance = 0;
+    for (int i = 0; i < s.length(); i++) {
+        if (s.charAt(i) == 'L') {
+            balance++;
+        } else {
+            balance--;
+        }
+        if (balance == 0) {
+            count++;
+        }
+    }
+    return count; 
+    }
+}
+1662. Check If Two String Arrays are Equivalent
+class Solution {
+    public boolean arrayStringsAreEqual(String[] word1, String[] word2) {
+    String str1 = String.join("", word1);
+    String str2 = String.join("", word2);
+    return str1.equals(str2);
+    }
+}
