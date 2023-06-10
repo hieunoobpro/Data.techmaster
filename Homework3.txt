@@ -1,0 +1,91 @@
+414. Third Maximum Number
+class Solution {
+    public int thirdMax(int[] nums) {
+        Arrays.sort(nums);
+        int count =0;
+        int end = nums.length-1;
+        for(int i=nums.length-1;i>0;i--){
+            if(nums[i]>nums[i-1]) {            
+                if(count==2){
+                    return nums[i];
+                  }
+                  count++;                
+                }       
+        }
+        if(count != 2) return nums[end]; 
+        return nums[0];
+    }
+}
+https://leetcode.com/problems/third-maximum-number/submissions/967738441/
+1051. Height Checker
+class Solution {
+    public int heightChecker(int[] heights) {
+        int[] check = new int[heights.length];
+        int count =0;
+        for(int i=0;i<heights.length;i++){
+            check[i]=heights[i];
+        }
+        Arrays.sort(heights);
+        for(int i=0;i<heights.length;i++){
+            if(heights[i]!=check[i]) count++;
+        }
+        return count;
+    }
+}
+https://leetcode.com/problems/height-checker/submissions/967738849/
+2418. Sort the People
+class Solution {
+    public String[] sortPeople(String[] names, int[] heights) {
+        int n = heights.length;
+        for (int i = 0; i < n - 1; i++) {
+            int maxIndex = i;
+            for (int j = i + 1; j < n; j++) {
+                if (heights[j] > heights[maxIndex]) {
+                    maxIndex = j;
+                }
+            }
+            int temp = heights[maxIndex];
+            heights[maxIndex] = heights[i];
+            heights[i] = temp;
+            String ten = names[maxIndex];
+            names[maxIndex] = names[i];
+            names[i] = ten;
+        }
+        return names;
+    }
+}
+https://leetcode.com/problems/sort-the-people/submissions/967739152/
+1636. Sort Array by Increasing Frequency
+class Solution {
+    public int[] frequencySort(int[] nums) {
+        // Đếm tần suất xuất hiện của mỗi phần tử trong mảng
+        Map<Integer, Integer> freqMap = new HashMap<>();
+        for (int num : nums) {
+            freqMap.put(num, freqMap.getOrDefault(num, 0) + 1);
+        }
+
+        // Sắp xếp các phần tử dựa trên tần suất xuất hiện của chúng sử dụng một PriorityQueue
+        PriorityQueue<Integer> pq = new PriorityQueue<>((a, b) -> {
+            int freq1 = freqMap.get(a);
+            int freq2 = freqMap.get(b);
+            if (freq1 != freq2) {
+                return freq1 - freq2;
+            } else {
+                return b - a;
+            }
+        });
+        for (int num : nums) {
+            pq.offer(num);
+        }
+
+        // Gán các phần tử đã được sắp xếp vào mảng kết quả
+        int[] result = new int[nums.length];
+        int i = 0;
+        while (!pq.isEmpty()) {
+            result[i++] = pq.poll();
+        }
+
+        return result;
+   }
+}
+https://leetcode.com/problems/sort-array-by-increasing-frequency/submissions/967739340/
