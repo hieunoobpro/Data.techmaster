@@ -1,0 +1,130 @@
+912. Sort an Array
+public class Solution {
+    public int[] sortArray(int[] nums) {
+        mergeSort(nums, 0, nums.length - 1);
+        return nums;
+    }
+    
+    private void mergeSort(int[] nums, int left, int right) {
+        if (left < right) {
+            int mid = (left + right) / 2;
+            mergeSort(nums, left, mid);
+            mergeSort(nums, mid + 1, right);
+            merge(nums, left, mid, right);
+        }
+    }
+    
+    private void merge(int[] nums, int left, int mid, int right) {
+        int[] temp = new int[right - left + 1];
+        int i = left;
+        int j = mid + 1;
+        int k = 0;
+        
+        while (i <= mid && j <= right) {
+            if (nums[i] <= nums[j]) {
+                temp[k++] = nums[i++];
+            } else {
+                temp[k++] = nums[j++];
+            }
+        }
+        
+        while (i <= mid) {
+            temp[k++] = nums[i++];
+        }
+        
+        while (j <= right) {
+            temp[k++] = nums[j++];
+        }
+        
+        for (int p = 0; p < temp.length; p++) {
+            nums[left + p] = temp[p];
+        }
+    }
+}
+https://leetcode.com/problems/sort-an-array/submissions/983080183/
+2733. Neither Minimum nor Maximum
+class Solution {
+    public int findNonMinOrMax(int[] nums) {
+        int min = Integer.MAX_VALUE;
+        int max = Integer.MIN_VALUE;
+        
+        for (int num : nums) {
+            min = Math.min(min, num);
+            max = Math.max(max, num);
+        }
+        
+        for (int num : nums) {
+            if (num != min && num != max) {
+                return num;
+            }
+        }
+        
+        return -1;
+    }
+}
+https://leetcode.com/problems/neither-minimum-nor-maximum/submissions/983079873/
+2501. Longest Square Streak in an Array
+class Solution {
+    public int longestSquareStreak(int[] nums) {
+        int max = 0;
+        Set<Integer> set = new HashSet<>();
+        //max và et để lưu trữ các phần tử trong mảng
+        for(int i: nums) set.add(i);
+        for(int i=0;i<nums.length;i++) {
+            //duyệt qua mảng nums và thêm từng phần tử vào HashSet để kiểm tra xem phần tử bình phương của nó có tồn tại trong mảng sau này không.
+            int num = nums[i];
+            int count = 1;
+            while(set.contains(num*num)) {
+                num = num*num;
+                count++;
+            }
+            if(count > 1 && count > max) max = count;
+        }
+        //thực hiện vòng lặp qua mảng nums và với mỗi phần tử, nó đặt num bằng giá trị của phần tử hiện tại và count bằng 1 để theo dõi số lượng phần tử trong square streak hiện tại.
+        return max==0 ? -1 : max;
+    }
+}
+90/92 testcase, em chịu rồi thầy ơi
+2698. Find the Punishment Number of an Integer
+public class Solution {
+    public int punishmentNumber(int n) {
+        List<Integer> nums = new ArrayList<>();
+// nums để lưu trữ tất cả các số i thoả mãn điều kiện của đề bài trong khoảng từ 1 đến n
+        for (int i = 1; i <= n; i++) {
+            if (check(i)) {
+                nums.add(i);
+            }
+        }
+        int result = 0;
+        for (int num : nums) {
+//tính tổng bình phương của tất cả các số i trong danh sách nums để tìm kết quả cuối cùng.
+            result += num * num;
+        }
+        return result;
+    }
+    
+    private boolean check(int num) {
+        String digits = String.valueOf(num * num);
+//chuyển đổi bình phương của số đó thành một chuỗi ký tự và tính tổng các chữ số của chuỗi ký tự này để tạo một mảng sums lưu trữ tổng các giá trị nguyên của các đoạn thập phân có độ dài từ 1 đến i
+        int len = digits.length();
+        int[] sums = new int[len];
+        sums[0] = digits.charAt(0) - '0';
+        for (int i = 1; i < len; i++) {
+            sums[i] = sums[i - 1] + digits.charAt(i) - '0';
+        }
+        for (int i = 0; i < len; i++) {
+            int sum = 0;
+            for (int j = i; j < len; j++) {
+//duyệt qua tất cả các đoạn thập phân có độ dài từ i đến len và tính tổng các giá trị nguyên của các đoạn này
+                sum += digits.charAt(j) - '0';
+                if (sum > num) {
+                    break;
+                }
+                if (sum == num && (j == len - 1 || check(Integer.parseInt(digits.substring(j + 1))))) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+}
