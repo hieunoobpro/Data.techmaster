@@ -1,0 +1,94 @@
+509. Fibonacci Number
+class Solution {
+    public int fib(int n) {
+    if (n <= 1) {
+        return n;
+    }
+    //Độ phức tạp O(2^n)
+    return fib(n-1) + fib(n-2);
+    }
+}
+https://leetcode.com/problems/fibonacci-number/submissions/988578928/
+
+709. To Lower Case
+class Solution {
+    public String toLowerCase(String s) {
+     //Độ phức tạp O(n)
+       return s.toLowerCase();
+    }
+}
+https://leetcode.com/problems/to-lower-case/submissions/988599777/
+
+766. Toeplitz Matrix
+class Solution {
+    public boolean isToeplitzMatrix(int[][] matrix) {
+        int rows = matrix.length;
+        int cols = matrix[0].length;
+    // kiểm tra từng phần tử của ma trận
+    for (int i = 0; i < rows - 1; i++) {
+        for (int j = 0; j < cols - 1; j++) {
+            // kiểm tra xem liệu phần tử hiện tại không giống với phần tử bên phải hoặc phần tử bên dưới
+            if (matrix[i][j] != matrix[i + 1][j + 1]) {
+                return false;
+            }
+        }
+    }
+    // Độ phức tạp của thuật toán này là O(mn), m: hàng, n: cột .
+    return true;
+    }
+}
+https://leetcode.com/problems/toeplitz-matrix/submissions/988604544/
+
+88. Merge Sorted Array
+class Solution {
+    public void merge(int[] nums1, int m, int[] nums2, int n) {
+        int c =0;
+        for(int i = m;i<nums1.length;i++){
+            nums1[i] = nums2[c];
+            c++;
+        }
+        //Arrays.sort() độ phức tạp trung bình là O(n log n).
+        Arrays.sort(nums1);
+        // m là số lượng phần tử của mảng nums1 và n là số lượng phần tử của mảng nums2.
+        // Tổng độ phức tạp của thuật toán trên là O((m+n) log(m+n))
+    }
+}
+https://leetcode.com/problems/merge-sorted-array/submissions/988606834/
+
+977. Squares of a Sorted Array
+class Solution {
+    public int[] sortedSquares(int[] nums) {
+      for(int i = 0; i<nums.length;i++){
+          nums[i] = nums[i]*nums[i];
+      }   
+      Arrays.sort(nums);
+      //Độ phức tạp của thuật toán trên là O(n log n), với n là số lượng phần tử trong mảng nums.
+      return nums;
+    }
+}
+https://leetcode.com/problems/squares-of-a-sorted-array/submissions/988609055/
+
+1346. Check If N and Its Double Exist
+class Solution {
+    public boolean checkIfExist(int[] arr) {
+        Arrays.sort(arr);
+        // kiểm tra từ trái sang phải
+        for(int i = 0; i<arr.length;i++){
+            for(int j = i+1;j<arr.length;j++){
+                if(arr[j] == 2*arr[i]) return true;
+                //độ phức tạp O(n^2)
+            }
+        }
+        // kiểm tra từ phải sang trái (trường hợp số âm)
+        for(int i = arr.length-1; i>=0;i--){
+            for(int j = i-1; j>=0;j--){
+                if(arr[j] == 2*arr[i]) return true;
+                //độ phức tạp O(n^2)
+            }
+        }
+        //Sử dụng hàm Arrays.sort() để sắp xếp lại mảng trước khi duyệt, nên độ phức tạp của thuật toán được tính là O(n log n), vượt qua độ phức tạp của vòng lặp for. 
+        //Vì vậy, độ phức tạp của thuật toán trên là O(n log n).
+        return false;
+    }
+}
+https://leetcode.com/problems/check-if-n-and-its-double-exist/submissions/988615409/
