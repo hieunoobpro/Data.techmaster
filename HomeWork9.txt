@@ -1,0 +1,318 @@
+225. Implement Stack using Queues
+
+class MyStack {
+
+    private List<Integer> queue1;
+    private List<Integer> queue2;
+
+    public MyStack() {
+        queue1 = new ArrayList<>();
+        queue2 = new ArrayList<>();
+    }
+//Khi một phần tử mới được đưa vào ngăn xếp, nó được đưa vào queue2 và sau đó chuyển tất cả các phần tử hiện có trong queue1 sang queue2, với mục đích đảm bảo phần tử mới được đưa vào sẽ nằm ở đầu ngăn xếp. 
+    public void push(int x) {
+        queue2.add(x);
+        while (!queue1.isEmpty()) {
+            queue2.add(queue1.remove(0));
+        }
+        List<Integer> temp = queue1;
+        queue1 = queue2;
+        queue2 = temp;
+    }
+
+    public int pop() {
+        return queue1.remove(0);
+    }
+
+    public int top() {
+        return queue1.get(0);
+    }
+
+    public boolean empty() {
+        return queue1.isEmpty();
+    }
+    //độ phức tạp thời gian là O(n)
+}
+https://leetcode.com/problems/implement-stack-using-queues/submissions/1000194419/
+
+232. Implement Queue using Stacks
+
+class MyQueue {
+
+ Stack<Integer> stack1; // ngăn xếp đầu tiên
+    Stack<Integer> stack2; // ngăn xếp thứ hai
+
+    /** Khởi tạo cấu trúc dữ liệu */
+    public MyQueue() {
+        stack1 = new Stack<>();
+        stack2 = new Stack<>();
+    }
+    
+    /** Thêm phần tử x vào cuối hàng đợi */
+    public void push(int x) {
+        stack1.push(x);
+    }
+    
+    /** Xóa phần tử đầu tiên của hàng đợi và trả về phần tử đó */
+    public int pop() {
+        if (stack2.isEmpty()) {
+            while (!stack1.isEmpty()) {
+                stack2.push(stack1.pop());
+            }
+        }
+        return stack2.pop();
+    }
+    
+    /** Trả về phần tử đầu tiên của hàng đợi */
+    public int peek() {
+        if (stack2.isEmpty()) {
+            while (!stack1.isEmpty()) {
+                stack2.push(stack1.pop());
+            }
+        }
+        return stack2.peek();
+    }
+    
+    /** Kiểm tra xem hàng đợi có rỗng hay không */
+    public boolean empty() {
+        return stack1.isEmpty() && stack2.isEmpty();
+    }
+    //Độ phức tạp là O(n), với n là số lượng phần tử hiện có trong ngăn xếp đầu tiên.
+}
+https://leetcode.com/problems/implement-queue-using-stacks/submissions/1000194067/
+
+933. Number of Recent Calls
+class RecentCounter {
+    private Queue<Integer> requests;
+    public RecentCounter() {
+     requests = new LinkedList<>();
+    }
+    
+    public int ping(int t) {
+       requests.offer(t); // Thêm yêu cầu mới vào hàng đợi
+        while (requests.peek() < t - 3000) {
+            requests.poll(); // Loại bỏ yêu cầu cũ hơn 3000 mili giây
+        }
+        return requests.size(); // Trả về số lượng yêu cầu còn lại trong hàng đợi  
+    }
+    //độ phức tạp là O(n), với n là số lượng yêu cầu cũ trong hàng đợi.
+}
+https://leetcode.com/problems/number-of-recent-calls/submissions/1000215056/
+
+20. Valid Parentheses
+class Solution {
+    public boolean isValid(String s) {
+        Stack<Character> stack = new Stack<>();
+    for (char c : s.toCharArray()) {
+        if (c == '(' || c == '[' || c == '{') {
+            stack.push(c);
+        } else if (c == ')' || c == ']' || c == '}') {
+            if (stack.isEmpty()) {
+                return false;
+            }
+            char top = stack.pop();
+            if ((c == ')' && top != '(') ||
+                (c == ']' && top != '[') ||
+                (c == '}' && top != '{')) {
+                return false;
+            }
+        }
+    }
+    return stack.isEmpty(); 
+    }
+}
+
+20. Valid Parentheses
+class Solution {
+    public boolean isValid(String s) {
+        Stack<Character> stack = new Stack<>();
+    for (char c : s.toCharArray()) {
+        //kiểm tra xem ký tự đó có phải là một trong các ký tự mở ngoặc hay không.
+        if (c == '(' || c == '[' || c == '{') {
+            //Nếu đúng, ta đẩy ký tự đó vào ngăn xếp
+            stack.push(c);
+        // Nếu là ký tự đóng ngoặc 
+        } else if (c == ')' || c == ']' || c == '}') {
+     //Nếu rỗng, tức là không có ký tự mở ngoặc tương ứng, ta trả về false. 
+            if (stack.isEmpty()) {
+                return false;
+            }
+            char top = stack.pop();
+            //Nếu không rỗng, ta lấy ký tự đầu tiên trong ngăn xếp (ký tự mở ngoặc tương ứng) bằng phương thức pop() và kiểm tra xem ký tự đó có phù hợp với ký tự đóng ngoặc hiện tại hay không.
+            if ((c == ')' && top != '(') ||
+                (c == ']' && top != '[') ||
+                (c == '}' && top != '{')) {
+                return false;
+            }
+        }
+    }
+    return stack.isEmpty(); 
+    }
+    //Độ phức tạp là O(n).  
+}
+https://leetcode.com/problems/valid-parentheses/submissions/1000218523/
+
+622. Design Circular Queue
+class MyCircularQueue {
+    int[] queue;
+    int head, tail;
+    int numItems, size;
+    public MyCircularQueue(int k) {
+        size = k;
+        queue = new int[k];
+        numItems = 0;
+        head = 0;
+        tail = 0;
+    }
+    
+    public boolean enQueue(int value) {
+        //Nếu queue đã đầy, phương thức trả về false.
+        if(size == numItems)
+            return false;
+        queue[tail] = value;
+        //Nếu queue chưa đầy, phương thức đặt giá trị của phần tử vào vị trí tail trong queue và di chuyển vị trí tail sang phải một vị trí
+        tail = (tail+1) % size;
+        //ta tăng số lượng phần tử của queue và trả về true.
+        numItems++;
+        return true;
+    }
+    
+    public boolean deQueue() {
+        if(numItems == 0)
+        //Nếu queue rỗng, phương thức trả về false.
+            return false;
+        queue[head] = 0;
+        //ta đặt giá trị của phần tử đầu tiên trong queue bằng 0, di chuyển vị trí head sang phải một vị trí bằng cách sử dụng toán tử để quay vòng lại vị trí đầu tiên nếu vị trí head vượt quá kích thước của queue
+        head = (head+1) % size;
+        numItems--;
+        //giảm số lượng phần tử của queue. Sau đó, ta trả về true.
+        return true;
+    }
+    
+    public int Front() {
+        if(numItems == 0)
+            return -1;
+        return queue[head];
+        
+    }
+    
+    public int Rear() {
+        if(numItems == 0)
+            return -1;
+//trả về phần tử cuối cùng trong queue. Nếu queue rỗng, phương thức trả về -1.
+        return queue[tail == 0 ? size-1 : tail-1];
+    }
+    
+    public boolean isEmpty() {
+        return numItems == 0;
+    }
+    
+    public boolean isFull() {
+        return numItems == size;
+    }
+    //Độ phức tạp của thuật toán là O(n)
+}
+https://leetcode.com/problems/design-circular-queue/submissions/1000229216/
+
+641. Design Circular Deque
+class MyCircularDeque {
+    //ử dụng một ArrayList để lưu trữ các phần tử trong deque và biến size để lưu trữ kích thước tối đa của deque.
+    ArrayList<Integer> deque;
+    int size;
+    public MyCircularDeque(int k) {
+        deque = new ArrayList<Integer>();
+        size = k;
+    }
+    
+    public boolean insertFront(int value) {
+        //Sử dụng phương thức add() của ArrayList để thêm phần tử vào vị trí đầu tiên. Sau đó, phương thức trả về true. Nếu deque đã đầy, phương thức trả về false.
+        if(deque.size() < size) {
+            deque.add(0, value);
+            return true;
+        }
+        return false;
+    }
+    
+    public boolean insertLast(int value) {
+        //Sử dụng phương thức add() của ArrayList để thêm phần tử vào vị trí cuối cùng. Sau đó, phương thức trả về true. Nếu deque đã đầy, phương thức trả về false.
+        if(deque.size() < size) {
+            deque.add(value);
+            return true;
+        }
+        return false;
+    }
+    
+    public boolean deleteFront() {
+        if(deque.size() > 0) {
+            deque.remove(0);
+            return true;
+        }
+        return false;
+    }
+    
+    public boolean deleteLast() {
+        if(deque.size() > 0) {
+            deque.remove(deque.size() - 1);
+            return true;
+        }
+        return false;
+    }
+    
+    public int getFront() {
+        if(deque.size() == 0) {
+            return -1;
+        }
+        return deque.get(0);
+    }
+    
+    public int getRear() {
+        if(deque.size() == 0) {
+            return -1;
+        }
+        return deque.get(deque.size() - 1);
+    }
+    
+    public boolean isEmpty() {
+        return deque.isEmpty();
+    }
+    
+    public boolean isFull() {
+        return deque.size() == size;
+    }
+    //Độ phức tạp là O(n).
+}
+https://leetcode.com/problems/design-circular-deque/submissions/1000231983/
+
+316. Remove Duplicate Letters
+class Solution {
+    public String removeDuplicateLetters(String s) {
+    int[] count = new int[26];
+    boolean[] visited = new boolean[26];
+    Stack<Character> stack = new Stack<>();
+    //Sử dụng một stack và một bảng băm để lưu trữ các ký tự đã thấy và số lần xuất hiện của chúng
+    //Với mỗi ký tự trong chuỗi đầu vào, ta kiểm tra xem ký tự đó đã xuất hiện trước đó hay chưa.
+    for (char ch : s.toCharArray()) {
+        count[ch - 'a']++;
+    }
+    for (char ch : s.toCharArray()) {
+        count[ch - 'a']--;
+        if (visited[ch - 'a']) {
+            continue;
+        }
+    // Nếu chưa, ta loại bỏ các ký tự trong stack có thứ tự từ sau lên trước, để đảm bảo ký tự được thêm vào stack là ký tự nhỏ nhất trong các ký tự còn lại và đảm bảo chuỗi kết quả có thứ tự từ điển nhỏ nhất. 
+        while (!stack.isEmpty() && stack.peek() > ch && count[stack.peek() - 'a'] > 0) {
+            visited[stack.pop() - 'a'] = false;
+        }
+        stack.push(ch);
+        visited[ch - 'a'] = true;
+    }
+    StringBuilder sb = new StringBuilder();
+    //tạo chuỗi kết quả từ các ký tự trong stack.
+    while (!stack.isEmpty()) {
+        sb.append(stack.pop());
+    }
+    return sb.reverse().toString();
+    }
+    //Độ phức tạp của thuật toán này là O(n)
+}
+https://leetcode.com/problems/remove-duplicate-letters/submissions/1000234990/
