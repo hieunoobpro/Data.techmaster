@@ -1,0 +1,139 @@
+700. Search in a Binary Search Tree
+class Solution {
+    public TreeNode searchBST(TreeNode root, int val) {
+        ArrayList<TreeNode> result = new ArrayList<>();
+        searchNode(root, val, result);
+        if (result.isEmpty()) {
+            return null;
+        }
+        return result.get(0);
+    }
+    
+    private void searchNode(TreeNode node, int val, ArrayList<TreeNode> result) {
+        if (node == null) {
+            return;
+        }
+        
+        if (node.val == val) {
+            result.add(node);
+        }
+        
+        if (node.val > val) {
+            searchNode(node.left, val, result);
+        } else {
+            searchNode(node.right, val, result);
+        }
+    }
+      //độ phức tạp là O(n)
+}
+https://leetcode.com/problems/search-in-a-binary-search-tree/submissions/1016652948/
+450. Delete Node in a BST
+
+class Solution {
+    public TreeNode deleteNode(TreeNode root, int key) {
+      if(root == null) {
+            return null;
+        }
+
+        if(root.val > key) {
+            root.left = deleteNode(root.left, key);
+        } else if (root.val < key) {
+            root.right = deleteNode(root.right, key);
+        } else {
+            if(root.left == null) {
+                return root.right;
+            } 
+            if (root.right == null) {
+                return root.left;
+            }
+            TreeNode maxL = root.left;
+            while(maxL.right != null) {
+                maxL = maxL.right;
+            }
+            root.val = maxL.val;
+            root.left = deleteNode(root.left, maxL.val);
+        }
+        return root;
+//độ phức tạp của thuật toán là O(n)
+    }
+}
+https://leetcode.com/problems/delete-node-in-a-bst/submissions/1016654631/
+
+144. Binary Tree Preorder Traversal
+class Solution {
+    public List<Integer> preorderTraversal(TreeNode root) {
+        List<Integer> list = new LinkedList<>();
+
+        preorder(root, list);
+
+        return list;
+    }
+
+    void preorder(TreeNode root, List<Integer> list) {
+        if(root == null) {
+            return;
+        }
+
+        list.add(root.val);
+        preorder(root.left, list);
+        preorder(root.right, list);
+    }
+    // độ phức tạp là O(n)
+}
+https://leetcode.com/problems/binary-tree-preorder-traversal/submissions/1016656283/
+94. Binary Tree Inorder Traversal
+class Solution {
+    public List<Integer> inorderTraversal(TreeNode root) {
+        List<Integer> result = new ArrayList<Integer>();
+        if (root == null) {
+            return result;
+        }
+        List<Integer> leftList = inorderTraversal(root.left);
+        result.addAll(leftList);
+        result.add(root.val);
+        List<Integer> rightList = inorderTraversal(root.right);
+        result.addAll(rightList);
+        //độ phức tạp là O(N)
+        return result;
+    }
+}
+https://leetcode.com/problems/binary-tree-inorder-traversal/submissions/1016657984/
+
+145. Binary Tree Postorder Traversal
+class Solution {
+    public List<Integer> postorderTraversal(TreeNode root) {
+        List<Integer> result = new ArrayList<>();
+        if (root == null) {
+            return result;
+        }
+        Stack<TreeNode> stack = new Stack<>();
+        stack.push(root);
+        TreeNode prev = null;
+        while (!stack.isEmpty()) {
+            TreeNode current = stack.peek();
+            if (prev == null || prev.left == current || prev.right == current) {
+                // Duyệt cây con bên trái trước
+                if (current.left != null) {
+                    stack.push(current.left);
+                } else if (current.right != null) {
+                // Nếu cây con bên trái là null, duyệt cây con bên phải
+                    stack.push(current.right);
+                }
+            } else if (current.left == prev) {
+                // Nếu cây con bên trái đã được duyệt, duyệt cây con bên phải
+                if (current.right != null) {
+                    stack.push(current.right);
+                }
+            } else {
+ // Nếu cả cây con bên trái và bên phải đã được duyệt, thêm giá trị của node hiện tại vào danh sách kết quả
+                result.add(current.val);
+                stack.pop();
+            }
+            
+            prev = current;
+        }
+        //Độ phức tạp của thuật toán này là O(n),
+        return result; 
+    }
+}
+https://leetcode.com/problems/binary-tree-postorder-traversal/submissions/1016660895/
