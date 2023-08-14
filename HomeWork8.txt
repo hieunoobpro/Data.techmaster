@@ -1,0 +1,260 @@
+707. Design Linked List
+class MyLinkedList {
+
+    class Node {
+        int value;
+        Node next;
+
+        public Node(int value) {
+            this.value = value;
+        }
+    }
+
+    Node head = null;
+    int size = 0;
+
+    public MyLinkedList() {
+        head = null;
+        size = 0;
+    }
+
+    public void showList() {
+        int idx = 0;
+        Node temp = head;
+        while(temp != null) {
+            System.out.println(idx + " : " + temp.value);
+            temp = temp.next;
+            idx++;
+        }
+    }
+    public int get(int index) {
+        if(index < 0 || index >= size){
+            return - 1;
+        }
+        Node temp = head;
+        while(index > 0) {
+            temp = temp.next;
+            index--;
+        }
+        return temp.value;
+    }
+
+    public void addAtHead(int val) {
+        Node newNode = new Node(val);
+        newNode.next = head;
+        head = newNode;
+        size++;
+    }
+
+    public void addAtTail(int val) {
+ 
+        if(head == null) {
+            addAtHead(val);
+            return;
+        }
+        Node newNode = new Node(val);
+
+        Node temp = head;
+        while(temp.next != null) {
+            temp = temp.next;
+        }
+        size++;
+        temp.next = newNode;
+    }
+
+    public void addAtIndex(int index, int val) {
+        if(index > size) {
+            return;
+        }
+        size++;
+        if(index == 0) {
+            addAtHead(val);
+            return;
+        }
+        if(index == size) {
+            addAtTail(val);
+            return;
+        }
+        Node newNode = new Node(val);
+        Node temp = head;
+        while (index > 1) {
+            temp = temp.next;
+            index--;
+        }
+        newNode.next = temp.next;
+        temp.next = newNode;
+    }
+
+    public void deleteAtIndex(int index) {
+        if(index < 0 || index >= size) {
+            return;
+        }
+        size--;
+        if(index == 0) {
+            head = head.next;
+            return;
+        }
+
+        Node temp = head;
+        while(index > 1) {
+            temp = temp.next;
+            index--;
+        }
+
+        temp.next = temp.next.next;
+        //Độ phức tạp là O(n)
+    }
+}
+https://leetcode.com/problems/design-linked-list/submissions/994313545/
+
+206. Reverse Linked List
+class Solution {
+    public ListNode reverseList(ListNode head) {
+        ListNode temp = head;
+        ListNode reverse = null;  
+        while(temp != null) { 
+            ListNode next = temp.next; 
+            temp.next = reverse;
+            reverse = temp;
+            temp = next;
+        }
+       return reverse;
+       //Vì phương thức này cần duyệt qua tất cả các phần tử trong danh sách và thực hiện thao tác đảo ngược vị trí các phần tử đó do đó tổng độ phức tạp là O(n).
+    }
+}
+https://leetcode.com/problems/reverse-linked-list/submissions/994315063/
+
+203. Remove Linked List Elements
+class Solution {
+    public ListNode removeElements(ListNode head, int val) {
+// Điều chỉnh con trỏ đầu tiên nếu có các nút đầu tiên có giá trị bằng val
+    while (head != null && head.val == val) {
+        head = head.next;
+    }
+    // Trường hợp danh sách liên kết không có nút nào hoặc chỉ có một nút
+    if (head == null || head.next == null) {
+        return head;
+    }
+    
+    // Xóa các nút có giá trị bằng val trong danh sách liên kết
+    ListNode prev = head;
+    ListNode curr = head.next;
+    
+    while (curr != null) {
+        if (curr.val == val) {
+            prev.next = curr.next;
+        } else {
+            prev = curr;
+        }
+        curr = curr.next;
+    }
+    //Độ phức tạp thời gian của thuật toán này là O(n)
+    return head;
+    }
+}
+https://leetcode.com/problems/remove-linked-list-elements/submissions/994317279/
+
+21. Merge Two Sorted Lists
+class Solution {
+    public ListNode mergeTwoLists(ListNode list1, ListNode list2) {
+    ListNode newNode = new ListNode(-1); 
+    // Tạo một nút giả để đại diện cho đầu danh sách mới
+    ListNode curr = newNode; 
+    // Con trỏ để chèn nút vào danh sách mới
+    while (list1 != null && list2 != null) { 
+        // Duyệt qua từng nút của hai danh sách liên kết
+        if (list1.val < list2.val) {
+            curr.next = list1; 
+            // Chèn nút của danh sách liên kết thứ nhất vào danh sách mới
+            list1 = list1.next; 
+            // Tiếp tục duyệt qua nút tiếp theo của danh sách liên kết thứ nhất
+        } else {
+            curr.next = list2; 
+            // Chèn nút của danh sách liên kết thứ hai vào danh sách mới
+            list2 = list2.next; 
+            // Tiếp tục duyệt qua nút tiếp theo của danh sách liên kết thứ hai
+        }
+        curr = curr.next; 
+        // Con trỏ chèn nút trỏ tới nút cuối cùng của danh sách mới
+    }
+// Chèn các nút còn lại của danh sách liên kết thứ nhất hoặc thứ hai vào danh sách mới
+    if (list1 != null) {
+        curr.next = list1;
+    } else {
+        curr.next = list2;
+    }
+    
+    return newNode.next; 
+    // Trả về đầu danh sách mới
+    // Độ phức tạp thời gian của thuật toán này là O(m + n), với m và n lần lượt là số lượng nút trong danh sách liên kết thứ nhất và thứ hai.
+    }
+}
+https://leetcode.com/problems/merge-two-sorted-lists/submissions/994320438/
+
+237. Delete Node in a Linked List
+class Solution {
+    public void deleteNode(ListNode node) {
+         node.val = node.next.val;
+          // Thay đổi giá trị của nút cần xóa bằng giá trị của nút tiếp theo
+         node.next = node.next.next; 
+         // Cập nhật con trỏ next của nút hiện tại để trỏ tới nút tiếp theo của nó
+         //Độ phức tạp thời gian của thuật toán này là O(1)
+         //Bài medium này hơi dễ :)
+    }
+}
+https://leetcode.com/problems/delete-node-in-a-linked-list/submissions/
+
+2487. Remove Nodes From Linked List
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode removeNodes(ListNode head) {
+        // Đảo ngược danh sách liên kết
+        head = reverse(head);
+        ListNode temp = head;
+        int largest = Integer.MIN_VALUE;
+        ListNode next = null;
+        ListNode prev = null;
+        while(temp != null){
+            next = temp.next;
+            // Nếu giá trị của nút lớn hơn hoặc bằng giá trị lớn nhất hiện tại
+            if(temp.val >= largest){
+                // Cập nhật giá trị lớn nhất
+                largest = temp.val;
+                // Lưu trữ nút hiện tại
+                prev = temp;
+            }else{
+                // Loại bỏ nút hiện tại khỏi danh sách liên kết
+                temp.next = null;
+    // Cập nhật con trỏ next của nút trước nó để trỏ tới nút tiếp theo của nó
+                prev.next = next;
+            }
+            temp = next; 
+        }
+        // Đảo ngược danh sách liên kết trở lại và trả về đầu danh sách mới
+        return reverse(head);
+    }
+
+    public ListNode reverse(ListNode head){
+        ListNode prev = null;
+        ListNode current = head;
+        ListNode next = null;
+        while(current != null){
+            next = current.next;
+            current.next = prev;
+            prev = current;
+            current = next;
+        }
+        return prev;
+        // Độ phức tạp thời gian O(n)
+    }
+}
+https://leetcode.com/problems/remove-nodes-from-linked-list/submissions/994332039/
