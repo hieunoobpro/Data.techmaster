@@ -1,0 +1,46 @@
+package techmaster.l1.Application;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Random;
+
+@RestController
+public class lab1 {
+    @GetMapping("/random-color")
+    public String getRandomColor(@RequestParam("type") int type) {
+        switch (type) {
+            case 1:
+                return getRandomColorName();
+            case 2:
+                return getRandomHexColor();
+            case 3:
+                return getRandomRgbColor();
+            default:
+                throw new IllegalArgumentException("Type không hợp lệ");
+        }
+    }
+
+    private String getRandomColorName() {
+        String[] colorNames = {"black", "blue", "red", "green"};
+        Random random = new Random();
+        int index = random.nextInt(colorNames.length);
+        return colorNames[index];
+    }
+
+    private String getRandomHexColor() {
+        Random random = new Random();
+        int r = random.nextInt(256);
+        int g = random.nextInt(256);
+        int b = random.nextInt(256);
+        return String.format("#%02x%02x%02x", r, g, b);
+    }
+
+    private String getRandomRgbColor() {
+        Random random = new Random();
+        int r = random.nextInt(256);
+        int g = random.nextInt(256);
+        int b = random.nextInt(256);
+        return String.format("rgb(%d, %d, %d)", r, g, b);
+    }
+}

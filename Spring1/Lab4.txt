@@ -1,0 +1,93 @@
+package techmaster.l1.Application;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
+import java.util.Random;
+import java.util.stream.Collectors;
+
+@RestController
+@RequestMapping("/api/v1/jobs")
+public class lab3 {
+    public List<Job> jobList = new ArrayList<>();
+    // GET all jobs
+    @GetMapping
+    public List<Job> getAllJobs() {
+        jobList.add(new Job("job1", "Engineer", "Job description for Engineer", "Location 1", 50000, 80000, "employer1@example.com"));
+        jobList.add(new Job("job2", "Teacher", "Job description for Teacher", "Location 2", 40000, 70000, "employer2@example.com"));
+        jobList.add(new Job("job3", "Developer", "Job description for Developer", "Location 3", 60000, 90000, "employer3@example.com"));
+        jobList.add(new Job("job4", "Freelancer", "Job description for Freelancer", "Location 4", 30000, 60000, "employer4@example.com"));
+        return jobList;
+    }
+
+    // GET a random job
+    @GetMapping("/random")
+    public ResponseEntity<Job> getRandomJob() {
+        if (jobList.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        Random random = new Random();
+        int randomIndex = random.nextInt(jobList.size());
+        Job randomJob = jobList.get(randomIndex);
+        return ResponseEntity.ok(randomJob);
+    }
+
+    // GET jobs sorted by maxSalary in descending order
+    // http://localhost:8080/api/v1/jobs/sort?max_salary=desc
+    @GetMapping("/sort")
+    public List<Job> getJobsSortedByMaxSalaryDesc(@RequestParam(defaultValue = "desc") String max_salary) {
+        Comparator<Job> comparator = Comparator.comparing(Job::getMaxSalary);
+        if (max_salary.equals("desc")) {
+            comparator = comparator.reversed();
+        }
+        return jobList.stream().sorted(comparator).collect(Collectors.toList());
+    }
+
+    // GET a job by ID
+    @GetMapping("/{id}")
+    public ResponseEntity<Job> getJobById(@PathVariable String id) {
+        Optional<Job> optionalJob = jobList.stream().filter(job -> job.getId().equals(id)).findFirst();
+        return optionalJob.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    // POST create a new job
+    @PostMapping
+    public ResponseEntity<Job> createJob(@RequestBody Job job) {
+        if (jobList.stream().anyMatch(existingJob -> existingJob.getId().equals(job.getId()))) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
+        jobList.add(job);
+        return ResponseEntity.status(HttpStatus.CREATED).body(job);
+    }
+
+    // PUT update an existing job
+    @PutMapping("/{id}")
+    public ResponseEntity<Job> updateJob(@PathVariable String id, @RequestBody Job updatedJob) {
+        Optional<Job> optionalJob = jobList.stream().filter(job -> job.getId().equals(id)).findFirst();
+        if (optionalJob.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        Job existingJob = optionalJob.get();
+        existingJob.setTitle(updatedJob.getTitle());
+        existingJob.setDescription(updatedJob.getDescription());
+        existingJob.setLocation(updatedJob.getLocation());
+        existingJob.setMinSalary(updatedJob.getMinSalary());
+        existingJob.setMaxSalary(updatedJob.getMaxSalary());
+        existingJob.setEmailTo(updatedJob.getEmailTo());
+        return ResponseEntity.ok(existingJob);
+    }
+
+    // DELETE a job
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteJob(@PathVariable String id) {
+        boolean removed = jobList.removeIf(job -> job.getId().equals(id));
+        if (removed) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+}
