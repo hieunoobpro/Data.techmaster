@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Random Color</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<button id="colorNameButton">Random Color Name</button>
+<button id="hexColorButton">Random HEX Color</button>
+<button id="rgbColorButton">Random RGB Color</button>
+
+<script>
+    $(document).ready(function() {
+        $("#colorNameButton").click(function() {
+            getRandomColor(1);
+        });
+
+        $("#hexColorButton").click(function() {
+            getRandomColor(2);
+        });
+
+        $("#rgbColorButton").click(function() {
+            getRandomColor(3);
+        });
+    });
+
+    function getRandomColor(type) {
+        $.ajax({
+            url: "http://localhost:8080/random-color?type=" + type,
+            type: "GET",
+            success: function(response) {
+                $("body").css("background-color", response);
+            },
+            error: function(error) {
+                console.log(error.responseText);
+            }
+        });
+    }
+</script>
+</body>
+</html>

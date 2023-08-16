@@ -1,0 +1,42 @@
+package com.example.User;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+public class UserController {
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody UserLoginRequest request) {
+        String username = request.getUsername();
+        String password = request.getPassword();
+
+        // Kiểm tra username và password
+        if (isValidCredentials(username, password)) {
+            User user = getUserByUsername(username);
+            UserResponse response = new UserResponse(user.getUsername(), user.getEmail(), user.getAvatar());
+            return ResponseEntity.ok(response);
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("Username hoặc password không chính xác");
+        }
+    }
+
+    private boolean isValidCredentials(String username, String password) {
+        // Kiểm tra username và password trong cơ sở dữ liệu hoặc logic xác thực khác
+        // Trong ví dụ này, ta giả sử username "admin" và password "123456" là đúng
+        return "admin".equals(username) && "123456".equals(password);
+    }
+
+    private User getUserByUsername(String username) {
+        // Lấy thông tin user từ cơ sở dữ liệu hoặc nguồn dữ liệu khác
+        // Trong ví dụ này, ta trả về một user cố định
+        User user = new User();
+        user.setId(1);
+        user.setUsername("admin");
+        user.setEmail("admin@example.com");
+        user.setAvatar("https://example.com/avatar.jpg");
+        return user;
+    }
+}

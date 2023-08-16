@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>BMI Calculator</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<h1>BMI Calculator</h1>
+<label for="heightInput">Height (m):</label>
+<input type="number" id="heightInput" step="0.01"><br><br>
+
+<label for="weightInput">Weight (kg):</label>
+<input type="number" id="weightInput" step="0.01"><br><br>
+
+<button id="getBMIButton">Get BMI (GET)</button>
+<button id="postBMIButton">Get BMI (POST)</button><br><br>
+
+<div id="result"></div>
+
+<script>
+  $(document).ready(function() {
+    $("#getBMIButton").click(function() {
+      var height = parseFloat($("#heightInput").val());
+      var weight = parseFloat($("#weightInput").val());
+      getBMI(height, weight);
+    });
+
+    $("#postBMIButton").click(function() {
+      var height = parseFloat($("#heightInput").val());
+      var weight = parseFloat($("#weightInput").val());
+      postBMI(height, weight);
+    });
+  });
+
+  function getBMI(height, weight) {
+    var url = "http://localhost:8080/bmi?height=" + height + "&weight=" + weight;
+    $.ajax({
+      url: url,
+      type: "GET",
+      success: function(response) {
+        displayResult(response);
+      },
+      error: function(xhr) {
+        displayError(xhr.responseText);
+      }
+    });
+  }
+
+  function postBMI(height, weight) {
+    var url = "http://localhost:8080/bmi";
+    var requestBody = {
+      height: height,
+      weight: weight
+    };
+    $.ajax({
+      url: url,
+      type: "POST",
+      contentType: "application/json",
+      data: JSON.stringify(requestBody),
+      success: function(response) {
+        displayResult(response);
+      },
+      error: function(xhr) {
+        displayError(xhr.responseText);
+      }
+    });
+  }
+
+  function displayResult(result) {
+    $("#result").text("BMI: " + result);
+  }
+
+  function displayError(error) {
+    $("#result").text("Error: " + error);
+  }
+</script>
+</body>
+</html>

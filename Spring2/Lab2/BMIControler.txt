@@ -1,0 +1,44 @@
+package com.example.BMI;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+public class BMIController {
+    @GetMapping("/bmi")
+    public ResponseEntity<String> calculateBMI(@RequestParam("height") double height,
+                                               @RequestParam("weight") double weight) {
+        if (height <= 0 || weight <= 0) {
+            throw new IllegalArgumentException("Thông tin chiều cao và cân nặng phải lớn hơn 0");
+        }
+
+        double bmi = weight / (height * height);
+        String result = interpretBMI(bmi);
+        return ResponseEntity.ok(result);
+    }
+
+    @PostMapping("/bmi")
+    public ResponseEntity<String> calculateBMIFromRequestBody(@RequestBody BMIRequest request) {
+        double height = request.getHeight();
+        double weight = request.getWeight();
+
+        if (height <= 0 || weight <= 0) {
+            throw new IllegalArgumentException("Thông tin chiều cao và cân nặng phải lớn hơn 0");
+        }
+
+        double bmi = weight / (height * height);
+        String result = interpretBMI(bmi);
+        return ResponseEntity.ok(result);
+    }
+
+    private String interpretBMI(double bmi) {
+        if (bmi < 18.5) {
+            return "Gầy";
+        } else if (bmi < 25) {
+            return "Bình thường";
+        } else if (bmi < 30) {
+            return "Hơi béo";
+        } else {
+            return "Béo phì";
+        }
+    }
+}
