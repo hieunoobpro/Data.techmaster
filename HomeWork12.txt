@@ -1,0 +1,218 @@
+class Solution {
+    // boolean visited[][];
+    int[] dr = {-1, 0, 0, 1};
+    int[] dc = {0, -1, 1, 0};
+
+    public int numIslands(char[][] grid) {
+        int m = grid.length;
+        int n = grid[0].length;
+
+        //visited = new boolean[m][n];
+
+        int count = 0;
+        Queue<int[]> q = new ArrayDeque<>();
+
+        for(int i = 0; i < m; i++) {
+            for(int j = 0; j < n; j++) {
+                if(grid[i][j] == '1') {
+                    count++;
+                    grid[i][j] = '0';
+                    q.add(new int[]{i, j});
+
+                    while(!q.isEmpty()) {
+                        int[] rc = q.poll();
+
+                        for(int k = 0; k < 4; k++) {
+                            int r = rc[0] + dr[k];
+                            int c = rc[1] + dc[k];
+
+                            if(r < 0 || r >= m || c < 0 || c >= n || grid[r][c] == '0') {
+                                continue;
+                            }
+
+                            if(grid[r][c] == '1') {
+                                grid[r][c] = '0';
+                                q.add(new int[]{r,c});
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+//Độ phức tạp của đoạn mã trên là O(m * n), với m là số hàng của ma trận grid và n là số cột
+        return count;
+    }
+}
+https://leetcode.com/problems/number-of-islands/submissions/1025319128/
+
+463. Island Perimeter
+public class Solution {
+    public int islandPerimeter(int[][] grid) {
+        int rows = grid.length;
+        int cols = grid[0].length;
+        int perimeter = 0;
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if (grid[i][j] == 1) {
+                     // Bắt đầu với giả định rằng cả 4 cạnh đều là đất
+                    perimeter += 4; 
+                    // Kiểm tra các ô kề cạnh
+                    if (i > 0 && grid[i - 1][j] == 1) {
+                        perimeter -= 2;
+                        // Trừ đi 2 nếu ô hiện tại chia sẻ cạnh trên với ô đất khác
+                    }
+                    if (j > 0 && grid[i][j - 1] == 1) {
+                        perimeter -= 2; 
+                         // Trừ đi 2 nếu ô hiện tại chia sẻ cạnh trái với ô đất khác
+                    }
+                }
+            }
+        }
+        //Độ phức tạp thời gian của giải pháp này là O(row * col)
+        return perimeter;
+    }
+}
+https://leetcode.com/problems/island-perimeter/submissions/1025320795/
+
+841. Keys and Rooms
+public class Solution {
+    public boolean canVisitAllRooms(List<List<Integer>> rooms) {
+        int n = rooms.size();
+        boolean[] visited = new boolean[n];
+        visited[0] = true; // Đánh dấu phòng 0 là đã thăm
+        Stack<Integer> stack = new Stack<>();
+        stack.push(0); // Bắt đầu từ phòng 0
+
+        while (!stack.isEmpty()) {
+            int currRoom = stack.pop();
+            
+            // Khám phá các chìa khóa trong phòng hiện tại
+            for (int key : rooms.get(currRoom)) {
+                if (!visited[key]) {
+                    visited[key] = true; // Đánh dấu phòng là đã thăm
+                    stack.push(key); // Thêm phòng vào ngăn xếp để khám phá tiếp
+                }
+            }
+        }
+        // Kiểm tra xem tất cả các phòng đã được thăm hay chưa
+        for (boolean roomVisited : visited) {
+            if (!roomVisited) {
+                return false;
+            }
+        }
+        // độ phức tạp là O(n + k), trong đó n là số lượng phòng và k là tổng số lượng chìa khóa  
+        return true;
+    }
+}
+https://leetcode.com/problems/keys-and-rooms/submissions/1025322040/
+
+419. Battleships in a Board
+public class Solution {
+    public int countBattleships(char[][] board) {
+        int count = 0;
+        int rows = board.length;
+        int cols = board[0].length;
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if (board[i][j] == 'X') {
+                    // Kiểm tra xem ô trên và ô bên trái có phải là một phần của tàu chiến không
+                    if ((i == 0 || board[i - 1][j] == '.') && (j == 0 || board[i][j - 1] == '.')) {
+                        count++;
+                    }
+                }
+            }
+        }
+        //Độ phức tạp thời gian của giải pháp này là O(m * n), với m và n lần lượt là số hàng và số cột
+        return count;
+    }
+}
+https://leetcode.com/problems/battleships-in-a-board/submissions/1025323102/
+
+1971. Find if Path Exists in Graph
+public class Solution {
+    public boolean validPath(int n, int[][] edges, int source, int destination) {
+        // Tạo một danh sách kề để biểu diễn đồ thị
+        List<List<Integer>> adjacencyList = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            adjacencyList.add(new ArrayList<>());
+        }
+
+        // Xây dựng danh sách kề bằng cách sử dụng các cạnh đã cho
+        for (int[] edge : edges) {
+            int u = edge[0];
+            int v = edge[1];
+            adjacencyList.get(u).add(v);
+            adjacencyList.get(v).add(u);
+        }
+
+        // Thực hiện tìm kiếm theo chiều sâu (DFS) để kiểm tra đường đi hợp lệ
+        boolean[] visited = new boolean[n];
+        return dfs(adjacencyList, source, destination, visited);
+    }
+
+    private boolean dfs(List<List<Integer>> adjacencyList, int current, int destination, boolean[] visited) {
+        if (current == destination) {
+            return true; // Tìm thấy một đường đi hợp lệ
+        }
+
+        visited[current] = true;
+
+        for (int neighbor : adjacencyList.get(current)) {
+            if (!visited[neighbor]) {
+                if (dfs(adjacencyList, neighbor, destination, visited)) {
+                    return true; // Tìm thấy một đường đi hợp lệ
+                }
+            }
+        }
+        //Độ phức tạp thời gian của giải pháp này là O(n + E), với n là số lượng đỉnh và E là số lượng cạnh
+        //Bài này còn khó hơn medium 
+        return false; // Không tìm thấy đường đi hợp lệ
+    }
+}
+https://leetcode.com/problems/find-if-path-exists-in-graph/submissions/1025324269/
+
+* 207. Course Schedule(em chưa làm đc)
+class Solution {
+    boolean check = false;
+    public boolean canFinish(int n, int[][] prerequisites) {
+        ArrayList<ArrayList<Integer>> graph = new ArrayList<ArrayList<Integer>>();
+        for(int i=0;i<n;i++){
+            graph.add(new ArrayList<Integer>());
+        }
+        for(int[] edgelist: prerequisites){
+            int u = edgelist[1];
+            int v = edgelist[0];
+
+            graph.get(u).add(v);
+        }
+
+        boolean[] visited = new boolean[n];
+        boolean[] currentPath = new boolean[n];
+
+        for(int i=0;i<n;i++){
+            dfs(i, graph, visited, currentPath);
+        }
+        return check;
+    }
+
+
+    public void dfs(int v, ArrayList<ArrayList<Integer>> g, boolean[] vis, boolean[] cur){
+        if(cur[v]){
+            check = true;
+        }
+
+        if(vis[v] || check){
+            return;
+        }
+
+        vis[v] = true;
+        cur[v] = true;
+        for(int adj: g.get(v)){
+            dfs(adj, g, vis, cur);
+        }
+        //Quá khó rồi (>_<)
+    }
+}
+https://leetcode.com/problems/course-schedule/submissions/1025326414/
