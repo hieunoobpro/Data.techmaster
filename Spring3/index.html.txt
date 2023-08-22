@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Todo List</title>
+</head>
+<body>
+<h1>Todo List</h1>
+
+<input type="text" id="todoInput" placeholder="Enter a new todo">
+<button onclick="addTodo()">Add</button>
+
+<ul id="todoList"></ul>
+
+<script>
+    function getTodos() {
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "http://localhost:8080/api/v1/todos", true);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                var response = JSON.parse(xhr.responseText);
+                displayTodos(response);
+            }
+        };
+        xhr.send();
+    }
+
+    function displayTodos(todos) {
+        var resultDiv = document.getElementById("result");
+        resultDiv.innerHTML = "";
+
+        for (var i = 0; i < todos.length; i++) {
+            var todo = todos[i];
+            var todoDiv = document.createElement("div");
+            todoDiv.innerHTML = "ID: " + todo.id + ", Title: " + todo.title + ", Status: " + todo.status;
+            resultDiv.appendChild(todoDiv);
+        }
+    }
+    }
+</script>
+</body>
+</html>

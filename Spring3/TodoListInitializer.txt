@@ -1,0 +1,43 @@
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+public class TodoListInitializer {
+    public static List<Todo> initializeFromExcel(String filePath) {
+        List<Todo> todos = new ArrayList<>();
+
+        try (FileInputStream fileInputStream = new FileInputStream(filePath);
+             Workbook workbook = new XSSFWorkbook(fileInputStream)) {
+
+            Sheet sheet = workbook.getSheetAt(0);
+            Iterator<Row> rowIterator = sheet.iterator();
+
+            // Bỏ qua dòng tiêu đề
+            if (rowIterator.hasNext()) {
+                rowIterator.next();
+            }
+
+            while (rowIterator.hasNext()) {
+                Row row = rowIterator.next();
+                int id = (int) row.getCell(0).getNumericCellValue();
+                String title = row.getCell(1).getStringCellValue();
+                boolean status = row.getCell(2).getNumericCellValue() == 1;
+
+                Todo todo = new Todo();
+                todo.setId(id);
+                todo.setTitle(title);
+                todo.setStatus(status);
+                todos.add(todo);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return todos;
+    }
+}

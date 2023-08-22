@@ -1,0 +1,16 @@
+package excel.example.demo;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+import java.util.List;
+
+@SpringBootApplication
+public class DemoApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(DemoApplication.class, args);
+	}
+	String excelFilePath = "C:/Users/DELL/Documents/GitHub/Data.techmaster/Spring3/excel.xlsx";
+	List<Todo> todos = TodoListInitializer.initializeFromExcel(excelFilePath);
+}

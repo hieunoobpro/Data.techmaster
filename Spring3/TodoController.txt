@@ -1,0 +1,46 @@
+package excel.example.demo;
+import org.springframework.web.bind.annotation.*;
+import java.util.ArrayList;
+import java.util.List;
+
+@RestController
+@RequestMapping("/todos")
+public class TodoControler {
+    private List<Todo> todoList = new ArrayList<>();
+
+    @GetMapping
+    public List<Todo> getAllTodos() {
+        return todoList;
+    }
+
+    @PostMapping
+    public Todo createTodo(@RequestBody Todo todo) {
+        todoList.add(todo);
+        return todo;
+    }
+
+    @PutMapping("/{id}")
+    public Todo updateTodo(@PathVariable Integer id, @RequestBody Todo updatedTodo) {
+        Todo todo = findTodoById(id);
+        if (todo != null) {
+            todo.setTitle(updatedTodo.getTitle());
+            todo.setStatus(updatedTodo.getStatus());
+        }
+        return todo;
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteTodo(@PathVariable Integer id) {
+        Todo todo = findTodoById(id);
+        if (todo != null) {
+            todoList.remove(todo);
+        }
+    }
+
+    private Todo findTodoById(Integer id) {
+        return todoList.stream()
+                .filter(todo -> todo.getId().equals(id))
+                .findFirst()
+                .orElse(null);
+    }
+}
