@@ -1,0 +1,123 @@
+733. Flood Fill
+class Solution {
+    public int[][] floodFill(int[][] image, int sr, int sc, int color) {
+        int rows = image.length;
+        int cols = image[0].length;
+        int checked = image[sr][sc];
+         // Nếu màu của điểm ảnh khởi đầu đã là màu mới, không cần thực hiện đệ quy
+        if (checked == color) {
+            return image;
+        }
+        
+        // Gọi đệ quy bằng cách sử dụng tìm kiếm theo chiều sâu
+        dfs(image, sr, sc, rows, cols, checked, color);
+        return image;
+    }
+    
+    private void dfs(int[][] image, int row, int col, int rows, int cols, int checked, int color) {
+        if (row < 0 || row >= rows || col < 0 || col >= cols || image[row][col] != checked) {
+            return;
+        }
+        
+        // Cập nhật màu của điểm ảnh hiện tại
+        image[row][col] = color;
+        
+        // Thực hiện đệ quy trên các điểm ảnh láng giềng
+        dfs(image, row - 1, col, rows, cols, checked, color); // Trên
+        dfs(image, row + 1, col, rows, cols, checked, color); // Dưới
+        dfs(image, row, col - 1, rows, cols, checked, color); // Trái
+        dfs(image, row, col + 1, rows, cols, checked, color); // Phải
+        //Độ phức tạp của thuật toán là O(m*n) với m,n là số hàng và số cột
+    }
+}
+https://leetcode.com/problems/flood-fill/submissions/1025642098/
+
+1748. Sum of Unique Elements
+class Solution {
+    public int sumOfUnique(int[] nums) {
+        HashMap<Integer, Integer> count = new HashMap<>();
+        int sum = 0;
+        
+        for (int num : nums) {
+        //Tìm số lượng các phần tử trong mảng mà có cùng giá trị với phần tử hiện tại
+        //Với mỗi phần tử num trong mảng nums, ta tăng giá trị đếm của num trong count lên một đơn vị. Nếu num chưa có trong count, ta gán giá trị mặc định là 0 và tăng lên 1.
+            count.put(num, count.getOrDefault(num, 0) + 1);
+        }
+        //Duyệt lại
+        for (int num : nums) {
+        // Nếu phần tử đó chỉ xuất hiện một lần, ta sẽ cộng giá trị của nó vào biến tổng
+            if (count.get(num) == 1) {
+                sum += num;
+            }
+        }
+        //Trả về giá trị của sum
+        return sum;
+        //Độ phức tạp là O(n). Trong đó n là kích thước của mảng nums
+    }
+}
+https://leetcode.com/problems/sum-of-unique-elements/submissions/1025645771/
+
+844. Backspace String Compare
+class Solution {
+    public boolean backspaceCompare(String s, String t) {
+    // So sánh chuỗi s và t
+    return buildFinalString(s).equals(buildFinalString(t));
+    }
+    private static String buildFinalString(String str) {
+        //Sử dụng một cấu trúc dữ liệu Stack để xây dựng chuỗi cuối cùng sau khi loại bỏ các ký tự backspace
+        Stack<Character> stack = new Stack<>();
+        for (char c : str.toCharArray()) {
+            //Nếu ký tự hiện tại khác '#', ta đẩy ký tự đó vào Stack
+            if (c != '#') {
+                stack.push(c);
+            //Nếu ký tự hiện tại là '#', ta kiểm tra xem Stack có rỗng hay không. Nếu Stack không rỗng, ta loại bỏ ký tự đó
+            } else if (!stack.isEmpty()) {
+                stack.pop();
+            }
+        }
+        return String.valueOf(stack);
+    }
+    //Độ phức tạp của thuật toán này là O(n), trong đó n là độ dài của chuỗi đầu vào.
+}
+https://leetcode.com/problems/backspace-string-compare/submissions/1025658474/
+
+100. Same Tree
+class Solution {
+    public boolean isSameTree(TreeNode p, TreeNode q) {
+        //Nếu p = null và q = null thì trả về false luôn
+        if(p==null && q==null) return true;
+        if(p!=null&&q!=null){
+        //Kiểm tra xem giá trị của nút hiện tại có giống nhau không, và đệ quy cho cây con trái và cây con phải của nút hiện tại. Nếu = nhau hết thì trả về true
+            return ((p.val==q.val)&&(isSameTree(p.left, q.left))&&(isSameTree(p.right,q.right)));
+        }
+        return false;
+        //Độ phức tạp của thuật toán là O(m+n) với m là số nốt của p và n là số nốt của q
+    }
+}
+https://leetcode.com/problems/same-tree/submissions/1025668200/
+
+160. Intersection of Two Linked Lists
+public class Solution {
+    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+    //Đảm bảo rằng ko mất đi giá trị của headA và headB trong quá trình duyệt danh sách.
+        ListNode a = headA;
+        ListNode b = headB;
+        while(a!=b){
+        //Nếu a đã duyệt hết danh sách headA (a == null), ta gán a bằng headB để tiếp tục duyệt danh sách headB.
+        if (a == null) {
+           a = headB;
+        } else {
+           a = a.next;
+           }
+        //Nếu b đã duyệt hết danh sách headB (b == null), ta gán b bằng headA để tiếp tục duyệt danh sách headA.
+        if (b == null) {
+         b = headA;
+        } else {
+          b = b.next;
+          }
+        }
+        return a;
+    }
+    //Độ phức tạp của đoạn mã này là O(m + n), trong đó m và n lần lượt là số lượng các node trong danh sách
+}
+https://leetcode.com/problems/intersection-of-two-linked-lists/submissions/1025693155/
